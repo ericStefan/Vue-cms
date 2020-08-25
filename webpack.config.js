@@ -53,7 +53,7 @@ module.exports = {
 
     resolve: {
         alias: {//修改vue被导入时候的包的路径
-            // "vue$": "vue/dist/vue.js"
+            "vue$": "vue/dist/vue.js"
         }
     }
 }
