@@ -1,0 +1,6 @@
+//忽略文件夹
+/node_modules/
+/.vscode/
+//忽略文件
+/.idea
+/.git
