@@ -4,7 +4,9 @@
     <mt-header fixed title="Vue电商项目"></mt-header>
 
     <!-- 中间路由区域 -->
-    <router-view></router-view>
+    <transition>
+          <router-view></router-view>
+    </transition>
 
     <!-- 底部Tabbar区域  使用MUI提供的tabbar-->
     <nav class="mui-bar mui-bar-tab">
@@ -35,6 +37,24 @@
 
 <style scoped>
 .app-container {
-  padding: 40px;
+  padding-top: 40px;
+  /* 取消动画导致元素溢出屏幕造成的滚动条 */
+  overflow-x: hidden;
+}
+
+.v-enter{
+  opacity: 0;
+  transform: translateX(100%) ;
+}
+
+.v-leave-to{
+  opacity: 0;
+  transform: translateX(-100%);
+    position: absolute;
+}
+
+.v-enter-active,
+.v-leave-active{
+  transition: all 0.5s ease;
 }
 </style>

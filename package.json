@@ -43,6 +43,7 @@
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
     "vue": "^2.6.12",
+    "vue-resource": "^1.5.1",
     "vue-router": "^3.4.3"
   }
 }

@@ -28,7 +28,12 @@ module.exports = {
         rules: [
             { test: /\.css$/, use: ['style-loader', 'css-loader'] },
             { test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader'] },
-            { test: /\.jpg|png|bmp|gif|svg|ttf|woff|woff2|eot$/, use: 'url-loader' },
+            { test: /\.jpg|png|bmp|gif|svg|ttf|woff|woff2|eot$/, use: {
+                loader:'url-loader',
+                options:{
+                    esModule: false, //默认为true，会使得img导入图片的url为[object Module]
+                }
+            } },
             // { test: /\.svg$/, use: 'svg-sprite-loader' },
             { test: /\.vue$/, use: 'vue-loader' },//处理.vue文件的loader
             {
