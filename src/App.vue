@@ -38,6 +38,7 @@
 <style scoped>
 .app-container {
   padding-top: 40px;
+  padding-bottom:50px;
   /* 取消动画导致元素溢出屏幕造成的滚动条 */
   overflow-x: hidden;
 }
