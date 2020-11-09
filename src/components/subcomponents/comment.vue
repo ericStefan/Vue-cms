@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <mt-button type="danger" size="large" plain>加载更多</mt-button>
+    <mt-button type="danger" size="large" plain @click="getMore">加载更多</mt-button>
   </div>
 </template>
 
@@ -40,14 +40,21 @@ export default {
     },
 
     methods:{
-        getComments(){
+        getComments(){//获取评论
             this.$http.get('api/getcomments/'+ this.id + "?pageindex=" + this.pageIndex).then(result=>{
                 if(result.body.status === 0){
-                    this.comments = result.body.message
+                    // this.comments = result.body.message
+                    // 每当获取新评论数据的时候，应该在旧的评论后面实现拼接，而不是替换
+                    this.comments = this.comments.concat(result.body.message)
                 }else{
                     Toast("获取评论失败！")
                 }
             })
+        },
+
+        getMore(){
+           this.pageIndex++;
+           this.getComments();
         }
     },
     props:["id"]
