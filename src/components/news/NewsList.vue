@@ -2,7 +2,7 @@
   <div>
     <ul class="mui-table-view">
       <li class="mui-table-view-cell mui-media" v-for="item in newslist" :key="item.id">
-        <a href="javascript:;" class="">
+        <router-link :to="'/home/newsinfo/' + item.id" >
           <img
             class="mui-media-object mui-pull-left"
             :src="item.img_url"
@@ -14,7 +14,7 @@
                 <span>点击:{{item.click}}次</span>
             </p>
           </div>
-        </a>
+        </router-link>
       </li>
     </ul>
   </div>
