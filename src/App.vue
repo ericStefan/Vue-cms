@@ -33,6 +33,7 @@
 </template>
 
 <script>
+
 </script>
 
 <style scoped>
@@ -58,4 +59,6 @@
 .v-leave-active{
   transition: all 0.5s ease;
 }
+
+* { touch-action: none; }
 </style>
