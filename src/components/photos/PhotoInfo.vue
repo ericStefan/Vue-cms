@@ -103,8 +103,18 @@ export default {
     justify-content: space-between;
     font-size: 13px;
   }
-.thumbs {
-  >>> .my-gallery{   //deep深层作用选择器
+
+  .content {
+    font-size: 13px;
+    line-height: 30px;
+  }
+}
+</style>
+
+<style lang="scss">
+// 由于部分元素在组件中需要渲染完成才能通过选择器找到对应元素，因此通过浏览器查找渲染出的元素的类，全局设置样式
+// 目前深层作用选择器失效（暂行方式）
+  .my-gallery{   //deep深层作用选择器
         display: flex;
         flex-wrap:wrap;//默认换行
         figure{
@@ -116,11 +126,5 @@ export default {
                 border-radius: 5px;
         }
     }
-}
-}
-  .content {
-    font-size: 13px;
-    line-height: 30px;
-  }
 }
 </style>

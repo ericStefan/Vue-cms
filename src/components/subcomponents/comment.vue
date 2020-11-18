@@ -14,7 +14,7 @@
         <!-- 在使用Date().now生成的时间作为唯一标识符绑定:key时候，在后面加上随机数，可以解决因为时间精确度导致的key不唯一。 -->
         <div class="cmt-item" v-for="(item,i) in comments" :key="item.add_time + Math.random()">
             <div class="cmt-title">
-                第{{i+1}}楼&nbsp;&nbsp;用户：{{item.user_name}}&nbsp;&nbsp;时间发表：{{item.add_tiem|dateFormat}}
+                第{{i+1}}楼&nbsp;&nbsp;用户：{{item.user_name}}&nbsp;&nbsp;时间发表：{{item.add_time|dateFormat}}
             </div>
             <div class="cmt-body">
                 <!-- 使用?表达式解决当用户无输入或者错误输入的问题 -->
