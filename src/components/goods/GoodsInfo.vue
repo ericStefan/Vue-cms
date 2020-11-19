@@ -1,5 +1,12 @@
 <template>
   <div class="goodsinfo-container">
+    <!-- 加入购物车小球动画 -->
+    <transition
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter">
+        <div class="ball" v-show="ballFlag" ref="ball"></div>
+    </transition>
     <!-- 商品轮播图区域 -->
     <div class="mui-card">
       <div class="mui-card-content">
@@ -12,7 +19,7 @@
 
     <!-- 商品购买区域 -->
     <div class="mui-card">
-      <div class="mui-card-header">{{goodsinfo.title}}}</div>
+      <div class="mui-card-header">{{goodsinfo.title}}</div>
       <div class="mui-card-content">
         <div class="mui-card-content-inner">
           <div class="price">
@@ -20,10 +27,11 @@
               >￥{{goodsinfo.sell_price}}</span
             >
             <!-- 添加购买数量 -->
-            <p>购买数量：<numbox></numbox></p>
+            <p>购买数量：<numbox @getcount = "getSelectedCount"
+            :max = "goodsinfo.stock_quantity"></numbox></p>
             <p>
               <mt-button type="primary" size="small">立即购买</mt-button>
-              <mt-button type="danger" size="small">加入购物车</mt-button>
+              <mt-button type="danger" size="small" @click="addToShopCar">加入购物车</mt-button>
             </p>
           </div>
         </div>
@@ -68,6 +76,8 @@ export default {
       id: this.$route.params.id, // 将路由参数对象的id挂载到data上
       lunbotu: [],   // 这是轮播图的数据
       goodsinfo:{}, //获取到的商品的信息
+      ballFlag:false, //控制小球的标识符
+      selectedCount:1, //加入购物车商品数量
     };
   },
 
@@ -107,6 +117,45 @@ export default {
     goComment(id){
         // 点击跳转到评论页面
         this.$router.push({name:"goodscomment",params:{id}})
+    },
+
+    addToShopCar(){
+      this.ballFlag = !this.ballFlag; 
+    },
+
+    beforeEnter(el){
+      el.style.transform = "translate(0,0)";
+    },
+    enter(el,done){
+      el.offsetWidth;
+
+      // 小球动画优化思路
+      // 1.分析：小球位移到的位置被写死固定了，随着分辨率改变和滚动条滚动时，就会导致位移不到想要的位置
+      // 2.只要分辨率和测试的时候不一样，或者滚动条有一定的滚动距离后，问题就出现了
+      // 3.不能把小球位移写死，一个给一个动态坐标位置
+      // 4.解决：先得到徽标的横纵坐标，再得到小球的横纵坐标，然后让y值求差，x值也求差，得到的结果，就是横纵坐标要位移的距离
+      // 5.domObject.getBundingClientRect()函数
+
+      // 获取小球在页面中的位置
+      const ballPosition = this.$refs.ball.getBoundingClientRect();
+      // 获取徽标在页面中的位置（在不涉及数据绑定的小功能实现上，可适当使用DOM操作）
+      const badgePosition = document.getElementById("badge").getBoundingClientRect();
+
+      const xDist = badgePosition.left - ballPosition.left;
+      const yDist = badgePosition.top - ballPosition.top;
+
+      el.style.transform = `translate(${xDist}px,${yDist}px)`;
+      el.style.transition = 'all 1s cubic-bezier(.58,-0.3,1,.56)';
+      done();
+    },
+    afterEnter(el){
+      this.ballFlag = !this.ballFlag;
+    },
+
+    getSelectedCount(count){
+      // 当子组件把选中的数量传递给父组件的时候，把选中的值保存到data上去
+        this.selectedCount = count;
+        console.log("父组件拿到的数量值为："+ this.selectedCount)
     }
   },
 };
@@ -127,6 +176,17 @@ export default {
       button{
           margin: 15px 0;
       }
+  }
+
+  .ball{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    z-index: 99;
+    top: 397px;
+    left: 146px;
   }
 }
 </style>
