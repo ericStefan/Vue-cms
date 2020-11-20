@@ -2,10 +2,11 @@
   <div class="goodsinfo-container">
     <!-- 加入购物车小球动画 -->
     <transition
-    @before-enter="beforeEnter"
-    @enter="enter"
-    @after-enter="afterEnter">
-        <div class="ball" v-show="ballFlag" ref="ball"></div>
+      @before-enter="beforeEnter"
+      @enter="enter"
+      @after-enter="afterEnter"
+    >
+      <div class="ball" v-show="ballFlag" ref="ball"></div>
     </transition>
     <!-- 商品轮播图区域 -->
     <div class="mui-card">
@@ -19,19 +20,26 @@
 
     <!-- 商品购买区域 -->
     <div class="mui-card">
-      <div class="mui-card-header">{{goodsinfo.title}}</div>
+      <div class="mui-card-header">{{ goodsinfo.title }}</div>
       <div class="mui-card-content">
         <div class="mui-card-content-inner">
           <div class="price">
-            市场价：<del>￥{{goodsinfo.market_price}}</del>&nbsp;&nbsp;销售价：<span class="now_price"
-              >￥{{goodsinfo.sell_price}}</span
+            市场价：<del>￥{{ goodsinfo.market_price }}</del
+            >&nbsp;&nbsp;销售价：<span class="now_price"
+              >￥{{ goodsinfo.sell_price }}</span
             >
             <!-- 添加购买数量 -->
-            <p>购买数量：<numbox @getcount = "getSelectedCount"
-            :max = "goodsinfo.stock_quantity"></numbox></p>
+            <p>
+              购买数量：<numbox
+                @getcount="getSelectedCount"
+                :max="goodsinfo.stock_quantity"
+              ></numbox>
+            </p>
             <p>
               <mt-button type="primary" size="small">立即购买</mt-button>
-              <mt-button type="danger" size="small" @click="addToShopCar">加入购物车</mt-button>
+              <mt-button type="danger" size="small" @click="addToShopCar"
+                >加入购物车</mt-button
+              >
             </p>
           </div>
         </div>
@@ -43,14 +51,18 @@
       <div class="mui-card-header">页眉</div>
       <div class="mui-card-content">
         <div class="mui-card-content-inner">
-            <p>商品货号：{{goodsinfo.goods_no}}</p>
-            <p>库存情况：{{goodsinfo.stock_quantity}}件</p>
-            <p>上架时间：{{goodsinfo.add_time |dateFormat}}</p>
+          <p>商品货号：{{ goodsinfo.goods_no }}</p>
+          <p>库存情况：{{ goodsinfo.stock_quantity }}件</p>
+          <p>上架时间：{{ goodsinfo.add_time | dateFormat }}</p>
         </div>
       </div>
       <div class="mui-card-header">
-          <mt-button type="primary" size="large" plain @click="goDesc(id)">图文介绍</mt-button>
-          <mt-button type="danger" size="large" plain @click="goComment(id)">商品评论</mt-button>
+        <mt-button type="primary" size="large" plain @click="goDesc(id)"
+          >图文介绍</mt-button
+        >
+        <mt-button type="danger" size="large" plain @click="goComment(id)"
+          >商品评论</mt-button
+        >
       </div>
     </div>
   </div>
@@ -74,10 +86,10 @@ export default {
   data() {
     return {
       id: this.$route.params.id, // 将路由参数对象的id挂载到data上
-      lunbotu: [],   // 这是轮播图的数据
-      goodsinfo:{}, //获取到的商品的信息
-      ballFlag:false, //控制小球的标识符
-      selectedCount:1, //加入购物车商品数量
+      lunbotu: [], // 这是轮播图的数据
+      goodsinfo: {}, //获取到的商品的信息
+      ballFlag: false, //控制小球的标识符
+      selectedCount: 1, //加入购物车商品数量
     };
   },
 
@@ -101,32 +113,42 @@ export default {
       });
     },
 
-    getGoodsInfo(){
-        this.$http.get("api/goods/getinfo/" + this.id).then(result=>{
-            if(result.body.status === 0){
-                this.goodsinfo = result.body.message[0];
-            }
-        })
+    getGoodsInfo() {
+      this.$http.get("api/goods/getinfo/" + this.id).then((result) => {
+        if (result.body.status === 0) {
+          this.goodsinfo = result.body.message[0];
+        }
+      });
     },
 
-    goDesc(id){
-        // 点击使用编程式导航，跳转到图文介绍页面
-        this.$router.push({name:"goodsdesc",params:{id}});
+    goDesc(id) {
+      // 点击使用编程式导航，跳转到图文介绍页面
+      this.$router.push({ name: "goodsdesc", params: { id } });
     },
 
-    goComment(id){
-        // 点击跳转到评论页面
-        this.$router.push({name:"goodscomment",params:{id}})
+    goComment(id) {
+      // 点击跳转到评论页面
+      this.$router.push({ name: "goodscomment", params: { id } });
     },
 
-    addToShopCar(){
-      this.ballFlag = !this.ballFlag; 
+    addToShopCar() {
+      this.ballFlag = !this.ballFlag;
+      // 拼接出一个要保存到store中的car数组里的商品信息对象
+      var goodsinfo = {
+        id: this.id,
+        count: this.selectedCount,
+        price: this.goodsinfo.sell_price,
+        selected: true,
+      };
+
+      // 调用store中的mutations来将商品加入购物车
+      this.$store.commit("addToCar",goodsinfo);
     },
 
-    beforeEnter(el){
+    beforeEnter(el) {
       el.style.transform = "translate(0,0)";
     },
-    enter(el,done){
+    enter(el, done) {
       el.offsetWidth;
 
       // 小球动画优化思路
@@ -139,24 +161,26 @@ export default {
       // 获取小球在页面中的位置
       const ballPosition = this.$refs.ball.getBoundingClientRect();
       // 获取徽标在页面中的位置（在不涉及数据绑定的小功能实现上，可适当使用DOM操作）
-      const badgePosition = document.getElementById("badge").getBoundingClientRect();
+      const badgePosition = document
+        .getElementById("badge")
+        .getBoundingClientRect();
 
       const xDist = badgePosition.left - ballPosition.left;
       const yDist = badgePosition.top - ballPosition.top;
 
       el.style.transform = `translate(${xDist}px,${yDist}px)`;
-      el.style.transition = 'all 1s cubic-bezier(.58,-0.3,1,.56)';
+      el.style.transition = "all 1s cubic-bezier(.58,-0.3,1,.56)";
       done();
     },
-    afterEnter(el){
+    afterEnter(el) {
       this.ballFlag = !this.ballFlag;
     },
 
-    getSelectedCount(count){
+    getSelectedCount(count) {
       // 当子组件把选中的数量传递给父组件的时候，把选中的值保存到data上去
-        this.selectedCount = count;
-        console.log("父组件拿到的数量值为："+ this.selectedCount)
-    }
+      this.selectedCount = count;
+      console.log("父组件拿到的数量值为：" + this.selectedCount);
+    },
   },
 };
 </script>
@@ -171,14 +195,14 @@ export default {
     font-weight: bold;
   }
 
-  .mui-card-header{
-      display: block;
-      button{
-          margin: 15px 0;
-      }
+  .mui-card-header {
+    display: block;
+    button {
+      margin: 15px 0;
+    }
   }
 
-  .ball{
+  .ball {
     width: 15px;
     height: 15px;
     border-radius: 50%;

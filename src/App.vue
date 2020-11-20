@@ -20,7 +20,8 @@
       </router-link>
       <router-link class="mui-tab-item-my" to="/shopcar">
         <span class="mui-icon mui-icon-extra mui-icon-extra-cart">
-          <span class="mui-badge" id="badge">0</span>
+          <!-- 将store中的getters里的加入购物车商品数量绑定到小图标上 -->
+          <span class="mui-badge" id="badge">{{$store.getters.getAllCount}}</span>
         </span>
         <span class="mui-tab-label">购物车</span>
       </router-link>

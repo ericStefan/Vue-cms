@@ -1,5 +1,53 @@
 import Vue from 'vue';
+// 导入vuex
+import Vuex from 'vuex';
+Vue.use(Vuex);
 
+// 每次刚进入网站，肯定会调用main.js在刚调用的时候，先从本地存储中把购物车数据读取出来，放到store中
+var car = JSON.parse(localStorage.getItem('car')||'[]');
+// 为Vuex创建一个Stroe()实例，得到一个数据仓储对象
+var store = new Vuex.Store({
+    state:{
+        // 可以吧state理解成组件中的data，专门用用来储存数据的
+        car:car //将购物车中商品的数据用一个数组存储起来，形式为{id:商品id,count:要购买的数量, price:商品的单价, selected:被选中状态}
+    },
+
+    mutations:{
+        addToCar(state,goodsinfo){
+            // 点击加入购物车，把商品信息保存到store中的car上
+            // 1.购物车之间就已经有这个对应的商品了，就只需要更新数量
+            // 2.如果没有则直接吧商品数据push到car中
+            
+            // 加载在购物车中没有找到对应商品
+            var flag = false
+            state.car.some(item=>{
+                if(item.id === goodsinfo.id){
+                    item.count += parseInt(goodsinfo.count)
+                    flag = true
+                    return true
+                }
+            })
+
+            // 如果循环完毕得到flag还是false，则把商品数据直接push到购物车中
+            if(!flag){
+                state.car.push(goodsinfo)
+            }
+
+            // 当更新car之后，把car数组存储到本地的localStorage中
+            localStorage.setItem('car',JSON.stringify(state.car));
+        }
+    },
+    
+    getters:{
+        getAllCount(state){
+            var c = 0;
+            state.car.forEach(item=>{
+                c += item.count
+            })
+            return c
+        }
+    }
+})
 // 导入router.js模块
 import router from './router.js'
 // 将router.js导入的VueRouter注册到vue上去
@@ -57,5 +105,6 @@ var vm = new Vue({
     },
     methods: {},
     router,
-    render:c=>c(app)
+    render:c=>c(app),
+    store:store, //将vuex创建的store挂载到VM实例上，可简写为store
 });
