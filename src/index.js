@@ -4,24 +4,24 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 // 每次刚进入网站，肯定会调用main.js在刚调用的时候，先从本地存储中把购物车数据读取出来，放到store中
-var car = JSON.parse(localStorage.getItem('car')||'[]');
+var car = JSON.parse(localStorage.getItem('car') || '[]');
 // 为Vuex创建一个Stroe()实例，得到一个数据仓储对象
 var store = new Vuex.Store({
-    state:{
+    state: {
         // 可以吧state理解成组件中的data，专门用用来储存数据的
-        car:car //将购物车中商品的数据用一个数组存储起来，形式为{id:商品id,count:要购买的数量, price:商品的单价, selected:被选中状态}
+        car: car //将购物车中商品的数据用一个数组存储起来，形式为{id:商品id,count:要购买的数量, price:商品的单价, selected:被选中状态}
     },
 
-    mutations:{
-        addToCar(state,goodsinfo){
+    mutations: {
+        addToCar(state, goodsinfo) {
             // 点击加入购物车，把商品信息保存到store中的car上
             // 1.购物车之间就已经有这个对应的商品了，就只需要更新数量
             // 2.如果没有则直接吧商品数据push到car中
-            
+
             // 加载在购物车中没有找到对应商品
             var flag = false
-            state.car.some(item=>{
-                if(item.id === goodsinfo.id){
+            state.car.some(item => {
+                if (item.id === goodsinfo.id) {
                     item.count += parseInt(goodsinfo.count)
                     flag = true
                     return true
@@ -29,22 +29,95 @@ var store = new Vuex.Store({
             })
 
             // 如果循环完毕得到flag还是false，则把商品数据直接push到购物车中
-            if(!flag){
+            if (!flag) {
                 state.car.push(goodsinfo)
             }
 
             // 当更新car之后，把car数组存储到本地的localStorage中
-            localStorage.setItem('car',JSON.stringify(state.car));
-        }
+            localStorage.setItem('car', JSON.stringify(state.car));
+        },
+
+        updateGoodsInfo(state, goodsinfo) {
+            // 修改购物车中商品的数量值
+            // 分析：
+            state.car.some(item => {
+                if (item.id === goodsinfo.id) {
+                    item.count = parseInt(goodsinfo.count);
+                    return true;
+                }
+            })
+
+            // 当修改商品的数量，把最新的购物车数据，保存到本地
+            localStorage.setItem('car', JSON.stringify(state.car));
+        },
+
+        removeFromCar(state, id) {
+            // 根据Id，从store中的购物车中删除对应的那条商品数据
+            state.car.some((item, i) => {
+                if (item.id === id) {
+                    state.car.splice(i, 1);
+                    return true;
+                }
+            })
+
+            // 将删除完毕的最新的购物车数据保存到本地
+            localStorage.setItem('car', JSON.stringify(state.car));
+
+        },
+
+        updateGoodsSelected(state, info) {
+            state.car.some(item => {
+                if (item.id == info.id) {
+                    item.selected = info.selected
+                }
+            })
+
+            // 将更新了最新开关状态的购物车数据保存到本地
+            localStorage.setItem('car', JSON.stringify(state.car));
+        },
     },
-    
-    getters:{
-        getAllCount(state){
+
+    getters: {
+        getAllCount(state) {
             var c = 0;
-            state.car.forEach(item=>{
+            state.car.forEach(item => {
                 c += item.count
             })
             return c
+        },
+
+        getGoodsCount(state) {
+            var o = {}
+            state.car.forEach(item => {
+                o[item.id] = item.count
+            })
+            return o;
+        },
+
+        getGoodsSelected(state) {
+            // 存储购物车勾选状态数据
+            var o = {}
+            state.car.forEach(item => {
+                o[item.id] = item.selected
+            })
+
+            return o;
+        },
+
+        getGoodsCountAndAmount(state){
+            // 存储结算页面勾选数量和勾选总价数据
+            var o = {
+                count:0,  //勾选对象
+                amount:0, //勾选总价 
+            }
+
+            state.car.forEach(item=>{
+                if(item.selected){
+                    o.count += item.count;
+                    o.amount +=item.price * item.count;
+                }
+            })
+            return o;
         }
     }
 })
@@ -60,7 +133,7 @@ Vue.use(VuePreview);
 // 导入时间插件moment.js
 import moment from 'moment'
 // 定义全局的过滤器,对时间进行格式化
-Vue.filter('dateFormat',function(dataStr,pattern = "YYYY-MM-DD HH:mm:ss"){
+Vue.filter('dateFormat', function (dataStr, pattern = "YYYY-MM-DD HH:mm:ss") {
     return moment(dataStr).format(pattern)
 })
 
@@ -101,10 +174,10 @@ import VueRouter from 'vue-router';
 var vm = new Vue({
     el: '#app',
     data: {
-        msg:'123'
+        msg: '123'
     },
     methods: {},
     router,
-    render:c=>c(app),
-    store:store, //将vuex创建的store挂载到VM实例上，可简写为store
+    render: c => c(app),
+    store: store, //将vuex创建的store挂载到VM实例上，可简写为store
 });

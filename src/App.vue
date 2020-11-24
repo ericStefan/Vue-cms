@@ -1,7 +1,11 @@
 <template>
   <div class="app-container">
     <!-- 顶部header区域 -->
-    <mt-header fixed title="Vue电商项目"></mt-header>
+    <mt-header fixed title="Vue电商项目">
+      <span  slot="left" @click="goBack" v-show="flag">
+        <mt-button icon="back">返回</mt-button>
+      </span>
+    </mt-header>
 
     <!-- 中间路由区域 -->
     <transition>
@@ -21,7 +25,9 @@
       <router-link class="mui-tab-item-my" to="/shopcar">
         <span class="mui-icon mui-icon-extra mui-icon-extra-cart">
           <!-- 将store中的getters里的加入购物车商品数量绑定到小图标上 -->
-          <span class="mui-badge" id="badge">{{$store.getters.getAllCount}}</span>
+          <span class="mui-badge" id="badge">{{
+            $store.getters.getAllCount
+          }}</span>
         </span>
         <span class="mui-tab-label">购物车</span>
       </router-link>
@@ -34,6 +40,35 @@
 </template>
 
 <script>
+export default{
+  data(){
+    return {
+      flag: false,
+    }
+  },
+
+  created(){
+    this.flag = this.$route.path === '/home'?false:true
+  },
+    methods:{
+    goBack(){
+      // 点击返回
+      this.$router.go(-1);//返回上一层级的路由
+      // this.$router.push('/home')  //返回指定层级的路由
+    }
+  },
+
+  watch:{
+    '$route.path':function(newVal){
+      if(newVal === '/home'){
+        this.flag = false
+      }else{
+        this.flag = true
+      }
+    }
+  }
+}
+
 </script>
 
 <style scoped>
@@ -65,7 +100,7 @@
 }
 /* 修改类名解决tabbar无法切换的问题修改.mui-tab-item为.mui-tab-item-my */
 .mui-bar-tab .mui-tab-item-my.mui-active {
-    color: #007aff;
+  color: #007aff;
 }
 .mui-tab-item-my {
   display: table-cell;
@@ -79,16 +114,16 @@
   color: #929292;
 }
 .mui-bar-tab .mui-tab-item-my .mui-icon {
-    top: 3px;
-    width: 24px;
-    height: 24px;
-    padding-top: 0;
-    padding-bottom: 0;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
-.mui-bar-tab .mui-tab-item-my .mui-icon~.mui-tab-label {
-    font-size: 11px;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.mui-bar-tab .mui-tab-item-my .mui-icon ~ .mui-tab-label {
+  font-size: 11px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
