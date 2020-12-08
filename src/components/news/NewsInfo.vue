@@ -1,24 +1,28 @@
 <template>
   <div class="newsinfo-container">
-      <!-- 大标题 -->
+    <!-- 大标题 -->
     <h3 class="title">{{ newsinfo.title }}</h3>
     <!-- 子标题 -->
     <p class="subtitle">
-      <span>发表时间：{{ newsinfo.add_item |dateFormat }}</span>
+      <span>发表时间：{{ newsinfo.add_item | dateFormat }}</span>
       <span>点击：{{ newsinfo.click }}次</span>
     </p>
-    <hr />
-    <!-- 内容区域 -->
-    <div class="content" v-html="newsinfo.content"></div>
-  
-    <!-- 评论子组件区域 -->
-    <comment-box  :id="this.id"></comment-box>
+        <!--这里放置真实显示的DOM内容-->
+        <hr />
+        <!-- 内容区域 -->
+        <div class="content" v-html="newsinfo.content"></div>
+
+        <!-- 评论子组件区域 -->
+        <comment-box :id="this.id"></comment-box>
+
   </div>
 </template>
 
 <script>
 // 1.导入评论子组件
 import comment from "../subcomponents/comment.vue";
+// 导入mui
+import mui from "../../lib/mui/js/mui.min.js";
 
 export default {
   data() {
@@ -26,6 +30,12 @@ export default {
       id: this.$route.params.id, //将URL地址中传递过来的ID值，挂载到data上，方便以后调用
       newsinfo: {}, //新闻对象
     };
+  },
+
+  mounted() {
+    mui(".mui-scroll-wrapper").scroll({
+      deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+    });
   },
 
   created() {
@@ -42,9 +52,10 @@ export default {
       });
     },
   },
-  components:{//用来注册子组件的节点
-    'comment-box':comment
-  }
+  components: {
+    //用来注册子组件的节点
+    "comment-box": comment,
+  },
 };
 </script>
 

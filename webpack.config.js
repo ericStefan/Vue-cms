@@ -5,7 +5,8 @@ const { resolve } = require('path')
 const webpack = require('webpack')
 const htmlPlugin = new HtmlPlugin({
     template: "./src/index.html",
-    filename: "index.html"
+    filename: "index.html",
+    favicon:path.resolve('favicon.ico'),//添加根目录上的facicon.ico文件给页面添加导航栏icon
 })
 
 module.exports = {

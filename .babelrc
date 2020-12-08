@@ -1,11 +1,16 @@
 {
-    "presets": ["@babel/preset-env"],
+    "presets": [
+        "@babel/preset-env"
+    ],
     "plugins": [
-        ["component",{
-        "libraryName": "mint-ui",
-        "style":true
-    }],
-    "transform-remove-strict-mode"
-]
-    
-  }
+        
+        ["component",
+            {
+              "libraryName": "element-ui",
+              "styleLibraryName": "theme-chalk"
+            }
+          ],
+
+        "transform-remove-strict-mode"
+    ]
+}

@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 顶部header区域 -->
     <mt-header fixed title="Vue电商项目">
-      <span  slot="left" @click="goBack" v-show="flag">
+      <span slot="left" @click="goBack" v-show="flag">
         <mt-button icon="back">返回</mt-button>
       </span>
     </mt-header>
@@ -18,10 +18,11 @@
         <span class="mui-icon mui-icon-home"></span>
         <span class="mui-tab-label">首页</span>
       </router-link>
-      <router-link class="mui-tab-item-my" to="/member">
-        <span class="mui-icon mui-icon-contact"></span>
-        <span class="mui-tab-label">会员</span>
+      <router-link class="mui-tab-item-my" to="/search">
+        <span class="mui-icon mui-icon-search"></span>
+        <span class="mui-tab-label">搜索</span>
       </router-link>
+
       <router-link class="mui-tab-item-my" to="/shopcar">
         <span class="mui-icon mui-icon-extra mui-icon-extra-cart">
           <!-- 将store中的getters里的加入购物车商品数量绑定到小图标上 -->
@@ -31,44 +32,43 @@
         </span>
         <span class="mui-tab-label">购物车</span>
       </router-link>
-      <router-link class="mui-tab-item-my" to="/search">
-        <span class="mui-icon mui-icon-search"></span>
-        <span class="mui-tab-label">搜索</span>
+      <router-link class="mui-tab-item-my" to="/member">
+        <span class="mui-icon mui-icon-contact"></span>
+        <span class="mui-tab-label">会员</span>
       </router-link>
     </nav>
   </div>
 </template>
 
 <script>
-export default{
-  data(){
+export default {
+  data() {
     return {
       flag: false,
-    }
+    };
   },
 
-  created(){
-    this.flag = this.$route.path === '/home'?false:true
+  created() {
+    this.flag = this.$route.path === "/home" ? false : true;
   },
-    methods:{
-    goBack(){
+  methods: {
+    goBack() {
       // 点击返回
-      this.$router.go(-1);//返回上一层级的路由
+      this.$router.go(-1); //返回上一层级的路由
       // this.$router.push('/home')  //返回指定层级的路由
-    }
+    },
   },
 
-  watch:{
-    '$route.path':function(newVal){
-      if(newVal === '/home'){
-        this.flag = false
-      }else{
-        this.flag = true
+  watch: {
+    "$route.path": function (newVal) {
+      if (newVal === "/home") {
+        this.flag = false;
+      } else {
+        this.flag = true;
       }
-    }
-  }
-}
-
+    },
+  },
+};
 </script>
 
 <style scoped>

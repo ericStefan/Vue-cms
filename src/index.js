@@ -168,8 +168,18 @@ import './lib/mui/css/icons-extra.css'
 //     startY: 0, //初始化时滚动至y
 // });
 
+// 导入bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+
+// 导入element-ui
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+
 import app from './App.vue';
 import VueRouter from 'vue-router';
+
 
 var vm = new Vue({
     el: '#app',
@@ -181,3 +191,5 @@ var vm = new Vue({
     render: c => c(app),
     store: store, //将vuex创建的store挂载到VM实例上，可简写为store
 });
+
+
