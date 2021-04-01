@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="referrer" content="no-referrer" />
     <title>Document</title>
-</head>
+<link rel="icon" href="favicon.ico"></head>
 
-<body>
+<body style="background-color:white;">
     <div id="app">
-        <h1>{{msg}}</h1>
     </div>
-    <script src="../dist/build.js"></script>
-<script src="Users/64296/Desktop/Vue_study/webpack-vue/dist/build.js"></script></body>
+    <!-- <script src="../dist/build.js"></script> -->
+    <!-- 热加载插件会自动在更目录生成隐藏的build.js,相对路径的文件不会被读取到 -->
+<script src="build.js"></script></body>
 
 </html>
